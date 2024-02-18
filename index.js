@@ -53,8 +53,8 @@ function esPrimo(numero) {
         if (numero % i === 0) {         // 4 entraría y cumpliría la condicion. 5 entraría pero se saldría porque no cumple
             return false;
         }
-        return true;
     }
+    return true;
 }
 
 // 10.-  Crear la función **ordenarArray** que acepta como argumento **un array de números** y devuelva un **array ordenado de menor a mayor**
@@ -79,45 +79,139 @@ function obtenerPares(a) {
 
 // 12.- Crear la función **pintarArray** que acepte como argumento **un array** y devuelva **una cadena de texto Array entrada: [0, 1, 2] String salida: '[0, 1, 2]'**
 
-/*function pintarArray(array) {
-    for (let i = 0; i < array.length; i++) {
-        posiciones += array[i].toString;
+/* Esta solución bikram no me la da por buena porque elimina los espacios
+ function pintarArray(array) {
+    let cadena = array.toString();
+    let resultado = "[" + cadena + "]";
+    console.log(resultado);
+    return resultado;
+} */
 
-if (i<(i-1)){
+/* Solución Vero */
+/* function pintarArray(array) {
+    return `[${array.join(', ')}]`;
+} */
 
-}
+/* Solución */
+function pintarArray(array) {
 
+    let resultado = array[0].toString();
+
+    for (let i = 1; i < array.length; i++) {
+        resultado += ", " + array[i].toString();
     }
-    return "[" + posiciones + "]";
+
+    return "[" + resultado + "]";
 }
 
-pintarArray([4, 6, 7, 8]);*/
+pintarArray([0, 1, 2]);
 
 
 // 13.- Crear la función **arrayMapi** que acepte como argumento **un Array y una función** y devuelva **un array en el que se haya aplicado la función a cada elemento del array**
 
-/*function arrayMapi (array, funcion) {
-    
+function arrayMapi(array, funcion) {
+
+    let arrayFuncion = [];
+
     for (let i = 0; i < array.length; i++) {
-        let arrayFuncion = [];
-        arrayFuncion[i]=funcion(array[i]); 
+
+        arrayFuncion[i] = funcion(array[i]);
     }
+
     return arrayFuncion;
+}
+
+
+/* 14.- Crear la función **eliminarDuplicados** que acepte como argumento **un array** y devuelva **un array en el que se hayan eliminado los duplicados*/
+
+/* Solución Vero: usa .includes y no lo hemos visto,no es válida
+
+ function eliminarDuplicados(array) {
+  let nuevoArray = [];
+  for (i = 0; i < array.length; i++) {
+      if (!nuevoArray.includes(array[i])) {
+        nuevoArray.push(array[i]);
+      }
+  }
+  return nuevoArray;
 }*/
 
-// 14.- Crear la función **eliminarDuplicados** que acepte como argumento **un array** y devuelva **un array en el que se hayan eliminado los duplicados**
+/* Solución 1, funciona pero para Bikhram no es válida porque se evalúa consigo mismo y descarta, siempre que más adelante haya una igualdad, pero graba cuando en adelante ya no vuelva a encontrarla. Ejemplo: [11, 22, 33, 11] --> [22, 33, 11]*/
 
-/*function eliminarDuplicados (array){ 
-    let sinDuplicados = array; // Creo otro array para no modificar el original
-    for (let i = 0; i < array.length; i++) { // Vamos seleccionando cada posicion para que sea el primer miembro de la comparación
-            for (let j = 1; j < array.length; j++) { // Recorremos de nuevo para un segundo miembro
-                if (array[i]==array[j]){
-                    sinDuplicados.delete(array[j]); // Modifica posiciones, para que no modifique hay que empezar desde atrás
-                }
+/* function eliminarDuplicados(array) {
+
+    // Creo un array para almacenar los numeros sin duplicar
+    let sinDuplicados = [];
+
+    // Recorremos el array desde la posicion 0 para tener el primer miembro de la comparación
+    for (let i = 0; i < array.length; i++) {
+
+        // Creo una variable para detectar si encuentra alguna igualdad
+        let igualdad = false;
+        // La declaro aquí porque a cada vuelta hago que se resetee a false
+
+        // Recorremos de nuevo para tener el segundo miembro de la comparación, pero desde la posición 1
+        for (let j = i+1; j < array.length; j++) {
+        // Si el for lo inicializo directamente en 1, cada vez que entra de uevo se vuelve a inicializar en 1 y compara la posicion del array consigo misma y siempre da true. Tiene que ir siempre uno por delante
+
+            // Si encuentra una igualdad por el array, establecemos igualdad como true
+            if (array[i] == array[j]) {
+                igualdad = true;
             }
-        return sinDuplicados;      
-    }  
-}*/
+        }
+        // Si no ha encontrado ninguna igualdad, subirá el numero
+        if (igualdad == false)
+            sinDuplicados.push(array[i]);
+    }
+    return sinDuplicados;
+} */
+
+/**Solución 2. Se evalúa con el nuevo array, que al estar vacío irá grabando desde el principio y descarta las repeticiones que salen más adelante, el resultado sale en el orden que compara el Bikhram */
+
+function eliminarDuplicados(array) {
+
+    // Creo un array para almacenar los numeros sin duplicar
+    let sinDuplicados = [];
+
+    // Recorremos el array original para tener el primer miembro de la comparación
+    for (let i = 0; i < array.length; i++) {
+
+        // Creo una variable para detectar si encuentra alguna igualdad
+        let igualdad = false;
+        // La declaro aquí porque a cada vuelta hago que se resetee a false
+
+        // Recorremos el nuevo array (sinDuplicados) para tener el segundo miembro de la comparación
+        for (let j = 0; j < sinDuplicados.length; j++) {
+
+            // Si encuentra una igualdad por el array, establecemos igualdad como true
+            if (array[i] == sinDuplicados[j]) {
+                igualdad = true;
+            }
+        }
+        // Si no ha encontrado ninguna igualdad, subirá el numero
+        if (igualdad == false)
+            sinDuplicados.push(array[i]);
+    }
+    return sinDuplicados;
+}
+
+eliminarDuplicados([44, 88, 44, 57, 68, 88, 87, 51, 54, 88, 36, 69]);
+
+
+/* Solución Vanesa mejorado */
+/* function eliminarDuplicados(arrayOriginal) {
+    let arraySinDuplicados = [];
+    arrayOriginal.sort((a, b) => (a - b)); // ¿se podría quitar esto?
+    for (let i = 0; i < arrayOriginal.length; i++) {
+
+        // Si encuentra una desigualdad...
+        if (arrayOriginal[i] !== arrayOriginal[(i + 1)]) { 
+            arraySinDuplicados.push(arrayOriginal[i]);
+        }
+    }
+    return arraySinDuplicados;
+} */
+
 
 // 15.- Crear variable de nombre **arrayNumerosNeg** declarada con un **array de números del 0 al -9 (0, -1, -2...)**
 
@@ -161,7 +255,20 @@ function esPar(numero) {
 
 // 22.- Crea el array **arrayFunciones** que tenga como valor **las funciones: suma, resta y multiplicación (todas aceptan 2 números como argumento y devuelve el resultado de su operación)**
 
-/*let arrayFunciones = [suma(a, b), resta(a, b), multiplicacion(a, b)];*/
+function suma (a, b){
+    return a + b;
+}
+
+function resta(a, b){
+    return a - b;
+}
+
+function multiplicacion(a, b){
+    return a * b;
+}
+
+let arrayFunciones = [suma, resta, multiplicacion];
+
 
 
 // 23.-  Crear la función **ordenarArray2** que acepta como argumento **un array de números** y devuelva un **array ordenado de mayor a menor**
@@ -205,5 +312,5 @@ function multiplicarArray(array) {
     return resultado;
 }
 
-/* La 9 Me la daba buena y ahora mala, no sé por qué */
-/* Las: 12, 13, 14 y 22 no sé sacarlas */
+
+/* Las: 13 y 22 no sé sacarlas */
